@@ -41,7 +41,7 @@ export class App extends Component {
 
   // fetch weather
   callWeatherApi = async (latitude, longitude, location) => {
-    let response = await fetch('http://api.openweathermap.org/data/2.5/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
+    let response = await fetch('/api/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
     let body = await response.json();
 
     if (body.cod == 404) {
