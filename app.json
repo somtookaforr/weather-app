@@ -13,7 +13,7 @@
   "addons": [
 
   ],
-  "buildpacks": [
+  "heroku buildpacks": [
     {
       "url": "heroku/nodejs"
     }

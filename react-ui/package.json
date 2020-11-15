@@ -8,7 +8,7 @@
   "dependencies": {
     "halogen": "^0.2.0",
     "react": "^16.2.0",
-    "react-dom": "^16.2.0"
+    "react-dom": "^16.14.0"
   },
   "scripts": {
     "start": "react-scripts start",

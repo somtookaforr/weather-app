@@ -9,7 +9,7 @@ require('dotenv').config()
 const PORT = process.env.PORT || 8000;
 unsplash.init(process.env.UNSPLASH_ID);
 
-var weatherKey = process.env.WEATHER_KEY //Nitin's API key
+var weatherKey = process.env.REACT_APP_WEATHER_KEY//Nitin's API key
 var locationURLPrefix = "http://api.openweathermap.org/data/2.5/weather?q=";
 var coordsURLPrefix = "http://api.openweathermap.org/data/2.5/weather?";
 var urlSuffix = '&APPID=' + weatherKey + "&units=imperial";
@@ -33,7 +33,7 @@ if (cluster.isMaster) {
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
-  app.get('/api/weather', (req, res) => {
+  app.get('http://api.openweathermap.org/data/2.5/weather', (req, res) => {
     let location = req.query.location;
     let latAndLon = "lat=" + req.query.latitude + '&' + "lon=" + req.query.longitude;
 
