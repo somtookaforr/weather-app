@@ -10,7 +10,7 @@ export const WeatherData = ({ data }) => {
   const { name, country, temp, description, temp_min, temp_max, feels_like, speed, deg, humidity } = data;
 
   return (
-    <>
+    <div>
       <header>
         <div>
         <img src={clock} alt="clock" className="icon"/>
@@ -47,6 +47,6 @@ export const WeatherData = ({ data }) => {
           <h4>{humidity} %</h4>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

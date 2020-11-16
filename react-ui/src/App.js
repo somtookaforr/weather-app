@@ -16,8 +16,9 @@ class App extends React.Component {
     this.changeLocation = this.changeLocation.bind(this); //'this' in the changeLocation func is referring to the App component
   }
 
-  abortController = new AbortController();
-  controllerSignal = this.abortController.signal;
+  
+  // controllerSignal = this.abortController.signal;
+  // abortController = new AbortController();
   
   weatherInit = () => {
     const success = (position) => {
