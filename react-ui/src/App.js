@@ -1,10 +1,9 @@
 import React, { Component } from 'react';
 import './App.css';
 // import { Info } from './Info';
-import { Searchbar } from './Searchbar';
+// import { Searchbar } from './Searchbar';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
-
 
 
 
@@ -12,33 +11,12 @@ export class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      response: '',
-      location: null,
-      latitude: null,
-      longitude: null,
-      loading: true,
-      message: null,
-      fetching: true
+      status: 'init',
+      isLoaded: false,
+      weatherData: null
     };
     this.changeLocation = this.changeLocation.bind(this); //'this' in the changeLocation func is referring to the App component
   }
-
-  // fetch unsplash
-  callUnsplashApi = async (location) => {
-    let response = await fetch('/api/unsplash?location=' + location);
-    let body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    var randomPhotoNumber = Math.floor(Math.random() * 10);
-    this.setState({
-      currentCityImage: body[randomPhotoNumber].urls.regular, //parse the data.body HTML string into an object, set it to the data prop in state
-      userFirstName: body[randomPhotoNumber].user.first_name,
-      userProfileLink: body[randomPhotoNumber].user.links.html,
-      userProfileImage: body[randomPhotoNumber].user.profile_image.medium
-    });
-    return body;
-  };
 
   // fetch weather
   callWeatherApi = async (latitude, longitude, location) => {
@@ -77,24 +55,26 @@ export class App extends Component {
     });
    }
 
-  // 3. Grab geocoords from browser window, then callApiWithCoords
-  getCoords() {
-    if (window.navigator.geolocation) { // if geolocation is supported
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          localStorage.setItem('latitude', position.coords.latitude);
-          localStorage.setItem('longitude', position.coords.longitude);
-          this.callWeatherApi(position.coords.latitude, position.coords.longitude, "geo")
-            .then(res => this.setState({ response: res.express }))
-            .catch(err => console.log(err));
-        },
-        (error) => {
-          this.setState({
-            error: error.message,
-          });
-        }
-      );
-    } 
+   weatherInit = () => {
+    const success = (position) => {
+      this.setState({status: 'fetching'});
+      localStorage.setItem('location-allowed', true);
+      this.getWeatherData(position.coords.latitude, position.coords.longitude);
+    }
+  
+    const error = () => {
+      this.setState({status: 'unable'});
+      localStorage.removeItem('location-allowed');
+      alert('Unable to retrieve location.');
+    }
+  
+    if (navigator.geolocation) {
+      this.setState({status: 'fetching'});
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      this.setState({status: 'unsupported'});
+      alert('Your browser does not support location tracking, or permission is denied.');
+    }
   }
 
   // 2. callWeatherApi with cached coords
@@ -120,27 +100,34 @@ export class App extends Component {
 
   }
 
+  returnActiveView = (status) => {
+    switch(status) {
+      case 'init':
+        return(
+          <button 
+          className='btn-main' 
+          onClick={this.onClick}
+          >
+            Get My Location
+          </button>
+        );
+      case 'success':
+        return <WeatherData data={this.state.weatherData} />;
+      default:
+        return <StatusData status={status} />;
+    }
+  }
+  onClick = () => {
+    this.weatherInit();
+  }
+
 render() {
-  return (
-    <div className="App">
-      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
-      {
-        this.state.loading ?
-        <div className="loading"><p>loading...</p></div> :
-        <WeatherData
-          errorText={this.state.errorText}
-          formError={this.state.formError}
-          location={this.state.location}
-          lat={this.state.latitude}
-          lon={this.state.longitude}
-          city={this.state.data.name}
-          temp={this.state.data.main.temp}
-          humidity={this.state.data.main.humidity}
-          weather={this.state.data.weather[Object.keys(this.state.data.weather)[0]].description}
-          windSpeed={this.state.data.wind.speed}
-        />
-      }
-  
+  return (        
+    <div className='App'>
+    <div className='container'>
+      {/* <WeatherData data={this.state.weatherData}/> */}
+      {this.returnActiveView(this.state.status)}
+    </div>
     </div>
   );
 }
