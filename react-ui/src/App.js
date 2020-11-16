@@ -17,23 +17,50 @@ export class App extends Component {
     this.changeLocation = this.changeLocation.bind(this); //'this' in the changeLocation func is referring to the App component
   }
 
+  // abortController = new AbortController();
+  controllerSignal = this.abortController.signal;
+
   // fetch weather
   getWeatherData = async (latitude, longitude, location) => {
-    let response = await fetch('/api/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
-    let body = await response.json();
-
-    if (body.cod == 404) {
-      console.log("error")
-      throw Error(body.message);
-    } else {
-      this.setState({
-        errorText: "",
-        data: body,
-        loading: false
-      })
-      return body;
-    }
-  };
+    let weatherApi = await fetch('/api/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
+    fetch(weatherApi, { signal: this.controllerSignal })
+    .then(response => response.json())
+    .then(
+      (result) => {
+        console.log(result);
+        const { name } = result;
+        const { country } = result.sys;
+        const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
+        const { description, icon } = result.weather[0];
+        const { speed, deg } = result.wind;
+  
+        this.setState({
+          status: 'success',
+          isLoaded: true,
+          weatherData: {
+            name,
+            country,
+            description,
+            icon,
+            temp: temp.toFixed(1),
+            feels_like: feels_like.toFixed(1),
+            temp_min: temp_min.toFixed(1),
+            temp_max: temp_max.toFixed(1),
+            speed,
+            deg,
+            humidity
+          }
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    );
+  }
+    
 
   // 4. Grab location from Searchbar and then callWeatherApi
   changeLocation(location) {
@@ -93,6 +120,21 @@ export class App extends Component {
   }
   onClick = () => {
     this.weatherInit();
+  }
+
+
+   componentWillUnmount() {
+    this.abortController.abort();
+  }
+
+  componentDidMount() {
+    // this.getWeatherData();
+    // this.weatherInit();
+    if(localStorage.getItem('location-allowed')) {
+      this.weatherInit();
+    } else {
+      return;
+    }
   }
 
 render() {

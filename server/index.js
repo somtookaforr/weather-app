@@ -39,13 +39,13 @@ if (cluster.isMaster) {
 
     if (location == "geo") {
       let url = coordsURLPrefix + latAndLon + urlSuffix;
-      request(url, function(error, response, body) {
-        res.send(body);
+      request(url, function(error, response, result) {
+        res.send(result);
       });
     } else {
       let url = locationURLPrefix + location + urlSuffix;
-      request(url, function(error, response, body) {
-        res.send(body);
+      request(url, function(error, response, result) {
+        res.send(result);
       });
     }
   });
