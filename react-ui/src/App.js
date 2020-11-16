@@ -105,6 +105,7 @@ export class App extends Component {
 render() {
   return (
     <div className="App">
+      <div className="container">
       <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
       {
         this.state.loading ?
@@ -122,6 +123,7 @@ render() {
           windSpeed={this.state.data.wind.speed}
         />
       }
+      </div>
     </div>
   );
 }
