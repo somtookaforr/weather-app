@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import {WeatherData} from './components/WeatherData'
+import { Info } from './Info';
 import { Searchbar } from './Searchbar';
+
 
 
 export class App extends Component {
@@ -20,22 +21,7 @@ export class App extends Component {
     this.changeLocation = this.changeLocation.bind(this); //'this' in the changeLocation func is referring to the App component
   }
 
-  // fetch unsplash
-  callUnsplashApi = async (location) => {
-    let response = await fetch('/api/unsplash?location=' + location);
-    let body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    var randomPhotoNumber = Math.floor(Math.random() * 10);
-    this.setState({
-      currentCityImage: body[randomPhotoNumber].urls.regular, //parse the data.body HTML string into an object, set it to the data prop in state
-      userFirstName: body[randomPhotoNumber].user.first_name,
-      userProfileLink: body[randomPhotoNumber].user.links.html,
-      userProfileImage: body[randomPhotoNumber].user.profile_image.medium
-    });
-    return body;
-  };
+  
 
   // fetch weather
   callWeatherApi = async (latitude, longitude, location) => {
@@ -120,12 +106,11 @@ export class App extends Component {
 render() {
   return (
     <div className="App">
-      <div className="container">
-      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation} className="search-bar"/>
+      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
       {
         this.state.loading ?
         <div className="loading"><p>loading...</p></div> :
-        <WeatherData
+        <Info
           errorText={this.state.errorText}
           formError={this.state.formError}
           location={this.state.location}
@@ -138,7 +123,6 @@ render() {
           windSpeed={this.state.data.wind.speed}
         />
       }
-     </div>
     </div>
   );
 }

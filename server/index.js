@@ -7,7 +7,6 @@ const numCPUs = require('os').cpus().length;
 require('dotenv').config()
 
 const PORT = process.env.PORT || 8000;
-unsplash.init(process.env.UNSPLASH_ID);
 
 var weatherKey = process.env.REACT_APP_WEATHER_KEY//Nitin's API key
 var locationURLPrefix = "http://api.openweathermap.org/data/2.5/weather?q=";
