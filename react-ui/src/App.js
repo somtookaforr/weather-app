@@ -33,7 +33,6 @@ export class App extends Component {
       throw Error(body.message);
     } else {
       console.log(body.message) 
-      this.callUnsplashApi(body.name)
       this.setState({
         errorText: "",
         data: body,
