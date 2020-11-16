@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
-// import { Info } from './Info';
-// import { Searchbar } from './Searchbar';
+import { Searchbar } from './Searchbar';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
 
@@ -19,7 +18,7 @@ export class App extends Component {
   }
 
   // fetch weather
-  callWeatherApi = async (latitude, longitude, location) => {
+  getWeatherData = async (latitude, longitude, location) => {
     let response = await fetch('/api/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
     let body = await response.json();
 
@@ -28,7 +27,6 @@ export class App extends Component {
       throw Error(body.message);
     } else {
       console.log(body.message) 
-      this.callUnsplashApi(body.name)
       this.setState({
         errorText: "",
         data: body,
@@ -75,29 +73,6 @@ export class App extends Component {
       this.setState({status: 'unsupported'});
       alert('Your browser does not support location tracking, or permission is denied.');
     }
-  }
-
-  // 2. callWeatherApi with cached coords
-  setCoordsFromLocalStorage(cachedLat, cachedLon) {
-    this.setState({
-      latitude: cachedLat,
-      longitude: cachedLon
-    }, () => {
-      this.callWeatherApi(this.state.latitude, this.state.longitude, "geo")
-        .then(res => this.setState({ response: res.express }))
-        .catch(err => console.log(err));
-    });
-  }
-
-  // 1. When component mounts, set cached variables, if lat exists then callWeatherApi, if not then get lat and lon and callWeatherApi
-  componentDidMount() {
-
-    let cachedLat = localStorage.getItem('latitude');
-    let cachedLon = localStorage.getItem('longitude');
-
-    // checks to see if a lat already exists. If so, then no need to getCoords()
-    cachedLat ? this.setCoordsFromLocalStorage(cachedLat, cachedLon) : this.getCoords();
-
   }
 
   returnActiveView = (status) => {
