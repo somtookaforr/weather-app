@@ -5,6 +5,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .container {
@@ -19,6 +20,7 @@
   box-shadow: 0 0px 10px #111;
   mix-blend-mode: difference;
   user-select: none;
+  align-items: center;
 }
 
 
