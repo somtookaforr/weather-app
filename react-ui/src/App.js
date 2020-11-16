@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import { Info } from './Info';
+import {WeatherData} from './components/WeatherData'
 import { Searchbar } from './Searchbar';
-import { Unsplash } from './Unsplash';
-import { UnsplashUser } from './UnsplashUser';
 
 
 export class App extends Component {
@@ -123,21 +121,12 @@ render() {
   return (
     <div className="App">
       <div className="container">
-      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation} className=""/>
+      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation} className="search-bar"/>
       {
         this.state.loading ?
         <div className="loading"><p>loading...</p></div> :
-        <Info
-          errorText={this.state.errorText}
-          formError={this.state.formError}
-          location={this.state.location}
-          lat={this.state.latitude}
-          lon={this.state.longitude}
-          city={this.state.data.name}
-          temp={this.state.data.main.temp}
-          humidity={this.state.data.main.humidity}
-          weather={this.state.data.weather[Object.keys(this.state.data.weather)[0]].description}
-          windSpeed={this.state.data.wind.speed}
+        <WeatherData
+        data={this.state.weatherData}
         />
       }
      </div>
