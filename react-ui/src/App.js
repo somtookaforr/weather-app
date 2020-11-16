@@ -1,16 +1,11 @@
 import React, { Component } from 'react';
 import './App.css';
+// import { Info } from './Info';
 import { Searchbar } from './Searchbar';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
 
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { Info } from './Info';
-import { Searchbar } from './Searchbar';
-import { Unsplash } from './Unsplash';
-import { UnsplashUser } from './UnsplashUser';
+
 
 
 export class App extends Component {
@@ -132,7 +127,7 @@ render() {
       {
         this.state.loading ?
         <div className="loading"><p>loading...</p></div> :
-        <Info
+        <WeatherData
           errorText={this.state.errorText}
           formError={this.state.formError}
           location={this.state.location}
@@ -145,14 +140,7 @@ render() {
           windSpeed={this.state.data.wind.speed}
         />
       }
-      <UnsplashUser
-      userProfileLink={this.state.userProfileLink}
-      userProfileImage={this.state.userProfileImage}
-      userFirstName={this.state.userFirstName}>
-      </UnsplashUser>
-      <Unsplash
-        currentCityImage={this.state.currentCityImage}>
-      </Unsplash>
+  
     </div>
   );
 }
