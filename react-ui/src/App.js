@@ -26,7 +26,6 @@ export class App extends Component {
       console.log("error")
       throw Error(body.message);
     } else {
-      console.log(body.message) 
       this.setState({
         errorText: "",
         data: body,
