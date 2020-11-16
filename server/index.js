@@ -39,24 +39,17 @@ if (cluster.isMaster) {
 
     if (location == "geo") {
       let url = coordsURLPrefix + latAndLon + urlSuffix;
-      request(url, function(error, response, body) {
-        res.send(body);
+      request(url, function(error, response, result) {
+        res.send(result);
       });
     } else {
       let url = locationURLPrefix + location + urlSuffix;
-      request(url, function(error, response, body) {
-        res.send(body);
+      request(url, function(error, response, result) {
+        res.send(result);
       });
     }
   });
 
-  app.get('/api/unsplash', (req, res) => {
-    let location = req.query.location;
-    unsplash.searchPhotos(location, null, null, null, function(error, photos, link) {
-      body = photos;
-      res.send(body);
-    });
-  });
 
   // All remaining requests return the React app, so it can handle routing.
   app.get('*', function(request, response) {

@@ -48,6 +48,7 @@ class App extends React.Component {
     .then(
       (result) => {
         console.log(result);
+        
         const { name } = result;
         const { country } = result.sys;
         const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
