@@ -123,7 +123,7 @@ render() {
   return (
     <div className="App">
       <div className="container">
-      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
+      <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation} className=""/>
       {
         this.state.loading ?
         <div className="loading"><p>loading...</p></div> :
