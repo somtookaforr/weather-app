@@ -111,7 +111,7 @@ img.icon {
   color: black;
   font-size: 15px;
   display: block;
-  width: 92%;
+  width: 100%;
   padding: 15px;
   border: none;
   outline: none;
@@ -124,29 +124,4 @@ img.icon {
 
 .search-container .search-bar:focus {
   background-color: white;
-}
-
-.location-container {
-  color: white;
-  font-size: 30px;
-  text-align: center;
-  text-shadow: 3px 3px rgba(58, 53, 53, 0.73);
-}
-
-.weather-container {
-  text-align: center;
-}
-
-.weather-container .temperature {
-  color: white;
-  position: relative;
-  display: inline-block;
-  margin: 30px auto;
-  padding: 15px 25px;
-  font-size: 100px;
-  font-weight: 700;
-  background-color: rgb(255, 255, 255, 0.1);
-  border-radius: 16px;
-  box-shadow: 3px 3px rgba(58, 53, 53, 0.73);
-  text-shadow: 3px 3px rgba(58, 53, 53, 0.73);
 }
