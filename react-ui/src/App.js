@@ -122,6 +122,7 @@ export class App extends Component {
 render() {
   return (
     <div className="App">
+      <div className="container">
       <Searchbar errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
       {
         this.state.loading ?
@@ -139,14 +140,7 @@ render() {
           windSpeed={this.state.data.wind.speed}
         />
       }
-      <UnsplashUser
-      userProfileLink={this.state.userProfileLink}
-      userProfileImage={this.state.userProfileImage}
-      userFirstName={this.state.userFirstName}>
-      </UnsplashUser>
-      <Unsplash
-        currentCityImage={this.state.currentCityImage}>
-      </Unsplash>
+     </div>
     </div>
   );
 }
