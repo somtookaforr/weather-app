@@ -46,34 +46,13 @@ export class App extends Component {
       console.log("error")
       throw Error(body.message);
     } else {
-      (result) => {
-      console.log(result);
-        const { name } = result;
-        const { country } = result.sys;
-        const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
-        const { description, icon } = result.weather[0];
-        const { speed, deg } = result.wind;
-
+      console.log(body.message) 
+      this.callUnsplashApi(body.name)
       this.setState({
         errorText: "",
-        loading: false,
-        status: 'success',
-        isLoaded: true,
-        weatherData: {
-          name,
-          country,
-          description,
-          icon,
-          temp: temp.toFixed(1),
-          feels_like: feels_like.toFixed(1),
-          temp_min: temp_min.toFixed(1),
-          temp_max: temp_max.toFixed(1),
-          speed,
-          deg,
-          humidity
-        }
+        data: body,
+        loading: false
       })
-    }
       return body;
     }
   };
@@ -147,7 +126,16 @@ render() {
         this.state.loading ?
         <div className="loading"><p>loading...</p></div> :
         <WeatherData
-        data={this.state.weatherData}
+          errorText={this.state.errorText}
+          formError={this.state.formError}
+          location={this.state.location}
+          lat={this.state.latitude}
+          lon={this.state.longitude}
+          city={this.state.data.name}
+          temp={this.state.data.main.temp}
+          humidity={this.state.data.main.humidity}
+          weather={this.state.data.weather[Object.keys(this.state.data.weather)[0]].description}
+          windSpeed={this.state.data.wind.speed}
         />
       }
      </div>
