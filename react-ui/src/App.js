@@ -1,132 +1,132 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
-import { Info } from './Info';
-import { Searchbar } from './Searchbar';
+import { WeatherData } from './components/WeatherData'
+import {StatusData} from './components/StatusData'
 
 
-
-export class App extends Component {
+class App extends React.Component {  
   constructor(props) {
     super(props);
     this.state = {
-      response: '',
-      location: null,
-      latitude: null,
-      longitude: null,
-      loading: true,
-      message: null,
-      fetching: true
-    };
-    this.changeLocation = this.changeLocation.bind(this); //'this' in the changeLocation func is referring to the App component
+      status: 'init',
+      isLoaded: false,
+      weatherData: null
+    }
+  }
+
+  // abortController = new AbortController();
+  controllerSignal = this.abortController.signal;
+  
+  weatherInit = () => {
+    const success = (position) => {
+      this.setState({status: 'fetching'});
+      localStorage.setItem('location-allowed', true);
+      this.getWeatherData(position.coords.latitude, position.coords.longitude);
+    }
+  
+    const error = () => {
+      this.setState({status: 'unable'});
+      localStorage.removeItem('location-allowed');
+      alert('Unable to retrieve location.');
+    }
+  
+    if (navigator.geolocation) {
+      this.setState({status: 'fetching'});
+      navigator.geolocation.getCurrentPosition(success, error);
+    } else {
+      this.setState({status: 'unsupported'});
+      alert('Your browser does not support location tracking, or permission is denied.');
+    }
+  }
+  
+  
+  getWeatherData = async (lat, lon, location) => {
+    const weatherApi = await fetch('/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location);
+     fetch(weatherApi, { signal: this.controllerSignal })
+     .then(response => response.json())
+     .then(
+      (result) => {
+        console.log(result);
+        const { name } = result;
+        const { country } = result.sys;
+        const { temp, temp_min, temp_max, feels_like, humidity } = result.main;
+        const { description, icon } = result.weather[0];
+        const { speed, deg } = result.wind;
+  
+        this.setState({
+          status: 'success',
+          isLoaded: true,
+          weatherData: {
+            name,
+            country,
+            description,
+            icon,
+            temp: temp.toFixed(1),
+            feels_like: feels_like.toFixed(1),
+            temp_min: temp_min.toFixed(1),
+            temp_max: temp_max.toFixed(1),
+            speed,
+            deg,
+            humidity
+          }
+        });
+      },
+      (error) => {
+        this.setState({
+          isLoaded: true,
+          error
+        });
+      }
+    );
   }
 
   
-
-  // fetch weather
-  callWeatherApi = async (latitude, longitude, location) => {
-    let response = await fetch('/api/weather?latitude=' + latitude + '&longitude=' + longitude + '&location=' + location);
-    let body = await response.json();
-
-    if (body.cod == 404) {
-      console.log("error")
-      throw Error(body.message);
-    } else {
-      console.log(body.message) 
-      this.setState({
-        errorText: "",
-        data: body,
-        loading: false
-      })
-      return body;
-    }
-  };
-
-  // 4. Grab location from Searchbar and then callWeatherApi
-  changeLocation(location) {
-    this.setState({
-      location: location
-    }, () => {
-      this.callWeatherApi("latitude", "longitude", this.state.location)
-        .then(res => this.setState({ response: res.express }))
-        .catch(err =>
-          this.setState({
-            errorText: "city does not exist",
-          }),
-          console.log(this.state.errorText)
-
-        );
-    });
-   }
-
-  // 3. Grab geocoords from browser window, then callApiWithCoords
-  getCoords() {
-    if (window.navigator.geolocation) { // if geolocation is supported
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          localStorage.setItem('latitude', position.coords.latitude);
-          localStorage.setItem('longitude', position.coords.longitude);
-          this.callWeatherApi(position.coords.latitude, position.coords.longitude, "geo")
-            .then(res => this.setState({ response: res.express }))
-            .catch(err => console.log(err));
-        },
-        (error) => {
-          this.setState({
-            error: error.message,
-          });
-        }
+returnActiveView = (status) => {
+  switch(status) {
+    case 'init':
+      return(
+        <button 
+        className='btn-main' 
+        onClick={this.onClick}
+        >
+          Get My Location
+        </button>
       );
-    } 
+    case 'success':
+      return <WeatherData data={this.state.weatherData} />;
+    default:
+      return <StatusData status={status} />;
   }
-
-  // 2. callWeatherApi with cached coords
-  setCoordsFromLocalStorage(cachedLat, cachedLon) {
-    this.setState({
-      latitude: cachedLat,
-      longitude: cachedLon
-    }, () => {
-      this.callWeatherApi(this.state.latitude, this.state.longitude, "geo")
-        .then(res => this.setState({ response: res.express }))
-        .catch(err => console.log(err));
-    });
-  }
-
-  // 1. When component mounts, set cached variables, if lat exists then callWeatherApi, if not then get lat and lon and callWeatherApi
-  componentDidMount() {
-
-    let cachedLat = localStorage.getItem('latitude');
-    let cachedLon = localStorage.getItem('longitude');
-
-    // checks to see if a lat already exists. If so, then no need to getCoords()
-    cachedLat ? this.setCoordsFromLocalStorage(cachedLat, cachedLon) : this.getCoords();
-
-  }
-
-render() {
-  return (
-    <div className="App">
-      <div className="container">
-      <Searchbar className="search-bar" errorClass={this.state.errorClass} onSubmit={this.changeLocation} onClick={this.changeLocation}/>
-      {
-        this.state.loading ?
-        <div className="loading"><p>loading...</p></div> :
-        <Info
-          errorText={this.state.errorText}
-          formError={this.state.formError}
-          location={this.state.location}
-          lat={this.state.latitude}
-          lon={this.state.longitude}
-          city={this.state.data.name}
-          temp={this.state.data.main.temp}
-          humidity={this.state.data.main.humidity}
-          weather={this.state.data.weather[Object.keys(this.state.data.weather)[0]].description}
-          windSpeed={this.state.data.wind.speed}
-        />
-      }
-      </div>
-    </div>
-  );
 }
+onClick = () => {
+  this.weatherInit();
+}
+
+
+  componentWillUnmount() {
+    this.abortController.abort();
+  }
+
+  componentDidMount() {
+    // this.getWeatherData();
+    // this.weatherInit();
+    if(localStorage.getItem('location-allowed')) {
+      this.weatherInit();
+    } else {
+      return;
+    }
+  }
+
+  render() {
+    return (        
+      <div className='App'>
+      <div className='container'>
+        {/* <WeatherData data={this.state.weatherData}/> */}
+        {this.returnActiveView(this.state.status)}
+      </div>
+      </div>
+    );
+  }
 }
 
 export default App;
