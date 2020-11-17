@@ -3,6 +3,8 @@ import './App.css';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
 
+const AbortController = window.AbortController;
+const controller = new AbortController();
 
 class App extends React.Component {  
   constructor(props) {
@@ -39,10 +41,7 @@ class App extends React.Component {
   
   
   getWeatherData = async (lat, lon, location) => {
-    const AbortController = window.AbortController;
-    const controller = new AbortController();
-  
-    const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`
+    const weatherApi = '/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location;
     await fetch(weatherApi, { signal: this.controller })
      .then(response => response.json())
      .then(
