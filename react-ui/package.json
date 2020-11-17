@@ -3,11 +3,12 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "^1.1.0"
+    "react-scripts": "^1.1.5"
   },
   "dependencies": {
+    "abort-controller": "^3.0.0",
     "halogen": "^0.2.0",
-    "react": "^16.2.0",
+    "react": "^16.14.0",
     "react-dom": "^16.14.0"
   },
   "scripts": {

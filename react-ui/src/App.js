@@ -2,6 +2,9 @@ import React from 'react';
 import './App.css';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
+// import AbortController from "abort-controller";
+const AbortController = require('abort-controller');
+
 
 
 class App extends React.Component {  
@@ -14,8 +17,8 @@ class App extends React.Component {
     }
   }
 
-  // abortController = new AbortController();
-  // controllerSignal = this.abortController.signal;
+  abortController = new AbortController();
+  controllerSignal = this.abortController.signal;
   
   weatherInit = () => {
     const success = (position) => {
@@ -42,7 +45,7 @@ class App extends React.Component {
   
   getWeatherData = async (lat, lon, location) => {
     const weatherApi = await fetch('/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location);
-     fetch(weatherApi)
+     fetch(weatherApi, { signal: this.controllerSignal })
      .then(response => response.json())
      .then(
       (result) => {
