@@ -2,9 +2,6 @@ import React from 'react';
 import './App.css';
 import { WeatherData } from './components/WeatherData'
 import {StatusData} from './components/StatusData'
-// import AbortController from "abort-controller";
-const AbortController = require('abort-controller');
-
 
 
 class App extends React.Component {  
@@ -17,9 +14,7 @@ class App extends React.Component {
     }
   }
 
-  abortController = new AbortController();
-  controllerSignal = this.abortController.signal;
-  
+   
   weatherInit = () => {
     const success = (position) => {
       this.setState({status: 'fetching'});
@@ -44,8 +39,11 @@ class App extends React.Component {
   
   
   getWeatherData = async (lat, lon, location) => {
+    const AbortController = window.AbortController;
+    const controller = new AbortController();
+  
     const weatherApi = await fetch('/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location);
-     fetch(weatherApi, { signal: this.controllerSignal })
+     fetch(weatherApi, { signal: this.controller })
      .then(response => response.json())
      .then(
       (result) => {
