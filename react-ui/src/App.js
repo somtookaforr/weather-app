@@ -38,12 +38,12 @@ class App extends React.Component {
   }
   
   
-  getWeatherData = async (lat, lon, location) => {
+  getWeatherData =  (lat, lon, location) => {
     const AbortController = window.AbortController;
     const controller = new AbortController();
   
     const weatherApi = '/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location;
-    await fetch(weatherApi, { signal: this.controller })
+    fetch(weatherApi, { signal: this.controller })
      .then(response => response.json())
      .then(
       (result) => {
