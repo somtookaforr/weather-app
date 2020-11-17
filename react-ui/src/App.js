@@ -38,7 +38,7 @@ class App extends React.Component {
   }
   
   
-  getWeatherData = async (lat, lon, location) => {
+  getWeatherData =  (lat, lon, location) => {
     const AbortController = window.AbortController;
     const controller = new AbortController();
   
