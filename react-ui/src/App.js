@@ -15,7 +15,7 @@ class App extends React.Component {
   }
 
   // abortController = new AbortController();
-  controllerSignal = this.abortController.signal;
+  // controllerSignal = this.abortController.signal;
   
   weatherInit = () => {
     const success = (position) => {
@@ -42,7 +42,7 @@ class App extends React.Component {
   
   getWeatherData = async (lat, lon, location) => {
     const weatherApi = await fetch('/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location);
-     fetch(weatherApi, { signal: this.controllerSignal })
+     fetch(weatherApi)
      .then(response => response.json())
      .then(
       (result) => {
