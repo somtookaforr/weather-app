@@ -32,7 +32,7 @@ if (cluster.isMaster) {
   // Priority serve any static files.
   app.use(express.static(path.resolve(__dirname, '../react-ui/build')));
 
-  app.get('/api/weather', (req, res) => {
+  app.get('http://api.openweathermap.org/data/2.5/weather', (req, res) => {
     let location = req.query.location;
     let latAndLon = "lat=" + req.query.latitude + '&' + "lon=" + req.query.longitude;
 

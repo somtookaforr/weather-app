@@ -38,12 +38,12 @@ class App extends React.Component {
   }
   
   
-  getWeatherData =  (lat, lon, location) => {
+  getWeatherData = async (lat, lon, location) => {
     const AbortController = window.AbortController;
     const controller = new AbortController();
   
-    const weatherApi = '/api/weather?latitude=' + lat + '&longitude=' + lon + '&location=' + location;
-    fetch(weatherApi, { signal: this.controller })
+    const weatherApi = `http://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&appid=${process.env.REACT_APP_WEATHER_KEY}`
+    await fetch(weatherApi, { signal: this.controller })
      .then(response => response.json())
      .then(
       (result) => {
