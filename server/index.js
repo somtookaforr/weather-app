@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const cluster = require('cluster');
 const request = require('request');
-const unsplash = require('unsplash-api');
+// const unsplash = require('unsplash-api');
 const numCPUs = require('os').cpus().length;
 require('dotenv').config()
 
